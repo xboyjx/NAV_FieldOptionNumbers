@@ -6,23 +6,22 @@ import pandas as pd
 import pyodbc
 
 # 1 -Create a connection string
-Driver      = "ODBC Driver 17 for SQL Server"
-Server      = "ADAM2019"
-Database    = "NAVReportingTest"
+Driver = "SQL Server"
+Server = "OMSC-F01"
+Database = "MIRUSNewTest"
 ConnectionString = "Driver={" + Driver + "};Server="+Server+";Database="+Database+";Trusted_Connection=yes;"
 
 conn = pyodbc.connect(ConnectionString)
 # 2 - The query we want to use
 SQLQuery = """
-SELECT meta.[Object ID] AS TableNo,
-       obj.Name AS TableName,
-       meta.Metadata
-FROM NAVDemo.dbo.[Object Metadata] meta
-    JOIN NAVDemo.dbo.Object obj
-        ON meta.[Object Type] = obj.Type
-           AND meta.[Object ID] = obj.ID
+SELECT  meta.[Object ID] AS TableNo,
+		obj.Name AS TableName,
+		meta.Metadata
+FROM	dbo.[Object Metadata] meta
+		JOIN dbo.Object obj
+			ON meta.[Object Type] = obj.Type
+				AND meta.[Object ID] = obj.ID
 WHERE obj.Type = 1
-AND meta.[Object ID] = 15
 ORDER BY obj.ID"""
 # 3 -Load the SQL to a Python Pandas Dataframe
 ObjectMetaData = pd.read_sql(sql=SQLQuery,con=conn)#,params=params)

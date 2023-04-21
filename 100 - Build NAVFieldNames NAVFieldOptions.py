@@ -36,36 +36,35 @@ def ParseXML():
                 'OptionNo'  : OptionNo,
                 'OptionName' : Option},ignore_index=True)
                 OptionNo += 1    
-    dfNAVFieldNames.to_sql("NAVFieldNames",con=engine,schema=Schema,if_exists="append",index=False)
-    dfNAVFieldOptions.to_sql("NAVFieldOptions",con=engine,schema=Schema,if_exists="append",index=False)
+    dfNAVFieldNames.to_sql("NAVFieldNames",con=connection,schema=Schema,if_exists="append",index=False)
+    dfNAVFieldOptions.to_sql("NAVFieldOptions",con=connection,schema=Schema,if_exists="append",index=False)
     
 # 1 -Create a connection string
-Driver      = "ODBC Driver 17 for SQL Server"
-Server      = "ADAM2019"
-Database    = "NAVReportingTest"
+Driver = "SQL Server"
+Server = "OMSC-F01"
+Database = "MIRUSNewTest"
 Schema      = "dbo"
 ConnectionString = "Driver={" + Driver + "};Server="+Server+";Database="+Database+";Trusted_Connection=yes;"
 params              = urllib.parse.quote_plus(ConnectionString)
-engine = sa.create_engine("mssql+pyodbc:///?odbc_connect=%s" % params, fast_executemany=True)
+connection = pyodbc.connect(ConnectionString)
 
 # 2 - The query we want to use
 SQLQuery = """
-SELECT meta.[Object ID] AS TableNo,
-       obj.Name AS TableName,
-       meta.Metadata
-FROM NAVDemo.dbo.[Object Metadata] meta
-    JOIN NAVDemo.dbo.Object obj
-        ON meta.[Object Type] = obj.Type
-           AND meta.[Object ID] = obj.ID
+SELECT  meta.[Object ID] AS TableNo,
+		obj.Name AS TableName,
+		meta.Metadata
+FROM	dbo.[Object Metadata] meta
+		JOIN dbo.Object obj
+			ON meta.[Object Type] = obj.Type
+				AND meta.[Object ID] = obj.ID
 WHERE obj.Type = 1
---aND meta.[Object ID] <= 40
 ORDER BY obj.ID"""
 # 2A - the dataframes that will actually store all the output
 # From our parsing of the Metadata
 # Creating empty dataframe one for each table we will eventually write
 
 # 3 -Load the Data From NAV to a Python Pandas Dataframe
-ObjectMetaData = pd.read_sql(sql=SQLQuery,con=engine)#,params=params)
+ObjectMetaData = pd.read_sql(sql=SQLQuery, con=connection)
 # 4 - loop throught the output (Note - in the initial test I have 
 #     limited this to just table 15)
 for Name, TableNo, TableName, MetaData in ObjectMetaData.itertuples():

@@ -8,7 +8,8 @@ dfNAVFieldNames = pd.DataFrame(columns=['TableNo','TableName','FieldNo',
 dfNAVFieldOptions = pd.DataFrame(columns=['TableNo','TableName','FieldNo',
                                            'FieldName','OptionNo','OptionName'])
 
-tree = ET.parse("NAVTable-15.xml")
+parser = ET.XMLParser(encoding="utf-8")
+tree = ET.parse("NAVTable-15.xml", parser)
 root = tree.getroot()
 
 # this gets me all the field level attributes from the XML. It creates row in our

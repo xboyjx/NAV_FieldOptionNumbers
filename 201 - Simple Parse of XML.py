@@ -1,11 +1,11 @@
 import xml.etree.ElementTree as ET
 
-with open('NAVTable-36.xml', 'r') as xml_file:
+with open('NAVTable-15.xml', 'r') as xml_file:
     tree = ET.parse(xml_file)
 root = tree.getroot()
 
 for child in root.iter('{urn:schemas-microsoft-com:dynamics:NAV:MetaObjects}Field'):
-    #print(child.attrib)
+    # print(child.attrib)
     # uncomment the next lines to see a few columns
     print(child.attrib.get('ID'),
           child.attrib.get('Name'),
