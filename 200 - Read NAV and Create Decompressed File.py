@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 import pandas as pd
 import pyodbc
+import codecs
 
 # 1 -Create a connection string
 Driver = "SQL Server"
@@ -36,7 +37,6 @@ for Name, TableNo, TableName, MetaData in ObjectMetaData.itertuples():
     # We can print it to the screen
     print(output.decode("utf-8"))
     # we can write it to an xml file
-    OutputFileName = "NAVTable-" + str(TableNo)  + ".xml"
-    OutputFile = open(OutputFileName,"w+")
-    OutputFile.write(output.decode("utf-8"))
-    OutputFile.close()
+    OutputFileName = "NAVTable-" + str(TableNo) + ".xml"
+    with codecs.open(OutputFileName, "w+", encoding="utf-8") as OutputFile:
+        OutputFile.write(output.decode("utf-8"))

@@ -17,8 +17,8 @@ dfNAVFieldOptions = pd.DataFrame(columns=['TableNo','TableName','FieldNo',
 with open('NAVTable-15.xml', 'r') as xml_file:
     tree = ET.parse(xml_file)
 root = tree.getroot()
-TableNo = 15
-TableName = "Paymrms"
+TableNo = root.get("ID")
+TableName = root.get("Name")
 
 # this gets me all the field level attributes from the XML. It creates row in our
 # dataframe.  One row for each distinct field name and one row for each option
